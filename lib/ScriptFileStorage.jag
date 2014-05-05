@@ -1,0 +1,76 @@
+<%
+
+
+/*
+ *  Storing the content of the app into an object
+ * 
+ */
+
+
+function findAllApplicationScripts(startDirectory){
+var dirName= path.split('\\').pop().split('/').pop(); // splitting the path and extract the file or directory name
+var app = new Object();
+app.name = dirName;
+var filesList = new Array();
+var sourceFiles = new Array ();
+var dir = new File(path);
+filesList=dir.listFiles();
+
+
+
+for(var i= 0 ; i< filesList.length ; i++){
+	var filename= filesList[i].getPath().split('\\').pop().split('/').pop();
+	var file = new Object();
+	if(filesList[i].isDirectory())
+	{
+		file.dirname = filename;
+		file.file = findAllApplicationScripts(path + '/' + filename );
+	}	
+	else 
+	{
+		filesList[i].open("r");
+		file.filename =filename;
+		file.content = filesList[i].readAll();
+		file._file = filesList[i];
+	}
+
+	sourceFiles[i]= file;
+	
+	
+}
+
+return sourceFiles;
+}
+
+
+function loadFileResource(params, done){
+
+var path = params.url;
+var file = new File(path);
+file.open("r");
+var content = file.readAll();
+return content;
+
+};
+
+//getApp(home);
+//log.info(getApp(home));
+
+
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%>

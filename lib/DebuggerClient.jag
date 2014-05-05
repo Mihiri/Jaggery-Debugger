@@ -1,0 +1,32 @@
+<%
+
+
+
+
+
+
+function ErrorNotConnected(message) {
+  
+  try {
+      parse(null);
+     } 
+  catch (ErrorNotConnected) {
+      this.name = ErrorNotConnected.name;
+  	  this.message = message;
+	}
+finally {
+    log.info("Error :" + name);
+   }
+
+}
+
+
+
+
+
+
+
+
+
+
+%>
