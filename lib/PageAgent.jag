@@ -1,0 +1,142 @@
+<%
+/*
+ * code that could be used to access the file by the filepath
+ * 
+ var home = require("carbon").server.home;
+var log = new Log();
+home = home.split('/').slice(0, 6).join('/');
+var app = "sample";//anged ... hard coded until this get done
+home = home + '/apps/' + app ; // hard corded .. subject to change
+ * 
+ * 
+ */
+
+
+var scriptStorage = require('./scriptFileStorage.jag');
+
+
+
+function PageAgent(config, debuggerClient, scriptManager) {
+  this._debuggerClient = debuggerClient;
+  this._scriptManager = scriptManager;
+  this._scriptStorage = new ScriptFileStorage(config);
+}
+
+PageAgent.prototype.enable = function(params, done) {
+    done();
+  };
+  
+ PageAgent.prototype.canShowFPSCounter = function(params, done) {
+    done(null, { show: false });
+  };
+  
+
+  PageAgent.prototype.canContinuouslyPaint = function(params, done) {
+    done(null, { value: false });
+  };
+
+  PageAgent.prototype.setTouchEmulationEnabled = function(params, done) {
+    done();
+  };
+
+  PageAgent.prototype.getResourceTree = function(params, done) {
+    var cb = function() {
+      done.apply(null, arguments);
+      this.emit('resource-tree');
+    };
+
+    if (this._debuggerClient.isConnected) {
+      this._getResourceTreeForAppScript(params, cb);
+    } else {
+      this._debuggerClient.once(
+        'connect',
+        this._getResourceTreeForAppScript.bind(this, params, cb)
+      );
+    }
+  };
+
+  
+
+ 
+
+  PageAgent.prototype._getResourceTreeForAppScript = function(startDirectory, mainAppScript, done) {
+    
+        var app =this._scriptStorage.findAllApplicationScripts(startDirectory);
+        this._createResourceTreeResponse(startDirectory,app, done);
+    }; 
+    
+  
+  
+  
+  
+
+ PageAgent.prototype._createResourceTreeResponse = function(mainAppScript, scriptFiles, done) {
+    var resources = scriptFiles.map(function(filePath) {
+    	var file = new object();
+    	file.url = filepath;
+    	file.type = 'Script';
+    	file.mimeType = 'text/javascript';
+      return file;
+    });
+
+    var frameObject = new Object();
+    var frameTree =new Object();
+    var frame = new object();
+    frame.id = 'jaggery-toplevel-frame';
+    frame.url = mainAppScript;
+    frame.loaderId = createUniqueLoaderId();
+    frame._isJaggeruScript= true;
+    frameTree.frame =frame;
+    frameTree.resources = resources;
+    frameObject.frameTree = frameTree;
+          
+          
+    
+    done(null,frameObject );
+  };
+
+  
+  
+ PageAgent.prototype.getResourceContent= function (params, done) {
+    var scriptName = params.url;
+	if (scriptName === '') {
+    var content = '// There is no main module loaded in jaggery server.//' ;
+      return 
+        this._convertScriptSourceToGetResourceResponse(content, done);
+    }
+		var content = this._scriptStorage.load(scriptName);
+        this._convertScriptSourceToGetResourceResponse(content);
+ };
+
+  
+  
+  
+ PageAgent.prototype. _convertScriptSourceToGetResourceResponse = function(source, done) {
+    return done(null, {
+      content: source
+    });
+  };
+
+  
+
+
+
+
+
+
+function createUniqueLoaderId() {
+  var randomPart = String(Math.random()).slice(2);
+  return Date.now() + '-' + randomPart;
+}
+
+
+
+
+
+
+
+
+
+
+
+%>

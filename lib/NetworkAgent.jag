@@ -1,0 +1,39 @@
+<%
+
+function NetworkAgent() {
+}
+
+NetworkAgent.prototype.enable = function(params, done) {
+    done();
+  };
+
+
+NetworkAgent.prototype.loadResourceForFrontend = function(params, done) {
+	loadFileResource(params, done);
+};
+
+
+function loadFileResource(params, done) {
+ 
+ var filePath = params.url;
+ var file = new File(filePath);
+ file.open("r");
+ var content = file.readAll(); 
+ file.close();
+ var fileContent = new Object();
+ fileContent.statusCode = 200;
+ fileContent.headers = '{}';
+ fileContent.content= content;
+ done(null, fileContent);
+    };
+  
+
+
+
+
+NetworkAgent.prototype.setUserAgentOverride = function(params, done) {
+  done(null, {});
+};
+
+
+%>

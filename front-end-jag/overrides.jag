@@ -1,0 +1,52 @@
+
+ 
+// disable everything besides scripts and console
+// that means 'profiles' and 'timeline' at the moment
+WebInspector._orig_panelDescriptors = WebInspector._panelDescriptors;
+WebInspector._panelDescriptors = function() {
+  var panelDescriptors = this._orig_panelDescriptors();
+  return panelDescriptors.filter(function(pd) {
+   return ['scripts', 'console'].indexOf(pd.name()) != -1;
+ });
+};
+
+
+
+
+
+
+//
+// Open the main application file on startup
+//
+
+var home = require("carbon").server.home;
+var log = new Log();
+
+home = home.split('/').slice(0, 6).join('/');
+
+var app = "HouseManagement" ;  // to be changed ... hard coded until this get done
+home = home + '/apps/' + app + 'vote-list.jag ' ;
+var dir = new File(home);
+WebInspector.notifications.addEventListener(
+  WebInspector.Events.InspectorLoaded,
+  function() {
+    WebInspector.resourceTreeModel.addEventListener(true,
+      showMainAppFile,
+      null
+    );
+  },
+  null
+);
+
+
+function showMainAppFile() {
+  
+
+  
+   
+    WebInspector.showPanel('scripts').showUISourceCode(dir);
+    return true;
+  
+}
+
+
