@@ -16,7 +16,7 @@ function ErrorNotConnected(message) {
 	}
 finally {
     log.info("Error :" + name);
-   }
+}
 
 }
 

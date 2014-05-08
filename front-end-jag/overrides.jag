@@ -15,18 +15,7 @@ WebInspector._panelDescriptors = function() {
 
 
 
-//
-// Open the main application file on startup
-//
 
-var home = require("carbon").server.home;
-var log = new Log();
-
-home = home.split('/').slice(0, 6).join('/');
-
-var app = "HouseManagement" ;  // to be changed ... hard coded until this get done
-home = home + '/apps/' + app + 'vote-list.jag ' ;
-var dir = new File(home);
 WebInspector.notifications.addEventListener(
   WebInspector.Events.InspectorLoaded,
   function() {
